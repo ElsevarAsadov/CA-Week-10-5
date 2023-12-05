@@ -1,0 +1,144 @@
+﻿@model Book
+@{
+    ViewData["Title"] = "Update";
+}
+
+
+<div class="container-fluid">
+    <h1 class="mx-3">Update</h1>
+    <div class="row justify-content-center flex-column align-items-center">
+        <form class="col-md-8" asp-action="Update" method="post" enctype="multipart/form-data">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" class="form-control" placeholder="Name">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Code">Code</label>
+                    <input asp-for="Code" class="form-control" placeholder="Code">
+                    <span asp-validation-for="Code" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <label asp-for="Description">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="6" placeholder="Description"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            @* <div class="form-group">
+            <label for="inputAddress2">Address 2</label>
+            <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+            </div>*@
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label asp-for="CostPrice">CostPrice</label>
+                    <input asp-for="CostPrice" class="form-control" placeholder="CostPrice">
+                    <span asp-validation-for="CostPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="SalePrice">SalePrice</label>
+                    <input asp-for="SalePrice" class="form-control" placeholder="SalePrice">
+                    <span asp-validation-for="SalePrice" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="DiscountPercent">DiscountPercent</label>
+                    <input asp-for="DiscountPercent" class="form-control" placeholder="DiscountPercent">
+                    <span asp-validation-for="DiscountPercent" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="Tax">Tax</label>
+                    <input asp-for="Tax" class="form-control" placeholder="Tax">
+                    <span asp-validation-for="Tax" class="text-danger"></span>
+                </div>
+                @*<div class="form-group col-md-4">
+                <label for="inputState">State</label>
+                <select id="inputState" class="form-control">
+                <option selected>Choose...</option>
+                <option>...</option>
+                </select>
+                </div>
+                <div class="form-group col-md-2">
+                <label for="inputZip">Zip</label>
+                <input type="text" class="form-control" id="inputZip">
+                </div>*@
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label asp-for="AuthorId">Author</label>
+                    <select asp-for="AuthorId" class="form-select" aria-label="Default select example" asp-items="@(new SelectList(ViewBag.Authors, "Id", "FullName"))">
+                    </select>
+                    <span asp-validation-for="AuthorId" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="GenreId">Genre</label>
+                    <select asp-for="GenreId" class="form-select" aria-label="Default select example" asp-items="@(new SelectList(ViewBag.Genres, "Id", "Name"))">
+                    </select>
+                    <span asp-validation-for="GenreId" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="TagIds">Tag</label>
+                    <select asp-for="TagIds" class="form-select" aria-label="Default select example" asp-items="@(new SelectList(ViewBag.Tags, "Id", "Name"))">
+                    </select>
+                    <span asp-validation-for="TagIds" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-md-6">
+                    <label asp-for="BookPosterImageFile" class="form-label">BookPosterImageFile</label>
+                    <input asp-for="BookPosterImageFile" class="form-control" placeholder="BookPosterImageFile">
+                    <div style="width:150px;margin-top:20px">
+                        <img style="max-width:100%" src="~/uploads/Books/@Model.BookImages?.Where(x=>x.IsPoster == true).FirstOrDefault()?.ImageUrl" />
+                    </div>
+                    <span asp-validation-for="BookPosterImageFile"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="BookHoverImageFile" class="form-label">BookHoverImageFile</label>
+                    <input asp-for="BookHoverImageFile" class="form-control" placeholder="BookHoverImageFile">
+                    <div style="width:150px;margin-top:20px">
+                        <img style="max-width:100%" src="~/uploads/Books/@Model.BookImages?.Where(x=>x.IsPoster == false).FirstOrDefault()?.ImageUrl" />
+                    </div>
+                    <span asp-validation-for="BookHoverImageFile"></span>
+                </div>
+                <div class="col-md-12">
+                    <label asp-for="ImageFiles" class="form-label">ImageFiles</label>
+                    <input asp-for="ImageFiles" class="form-control" placeholder="ImageFiles">
+                    <div style="display:flex">
+                        @foreach (var slideImg in Model.BookImages.Where(x=>x.IsPoster == null))
+                    {
+                        <div style="width:150px;margin:0 20px;margin-top:20px;position:relative;">
+                                <span class="delete-image-btn position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger fs-1 text-white" style="right:0;font-size:15px;top:-15px !important;cursor:pointer">X</span>
+                            <img style="max-width:100%" src="~/uploads/Books/@slideImg?.ImageUrl" />
+                                <input name="BookImageIds" type="hidden" value="@slideImg.Id" />
+                        </div>
+                    }
+                    </div>
+                    <span asp-validation-for="ImageFiles"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" asp-for="IsAvailable">
+                    <label class="form-check-label" asp-for="IsAvailable">
+                        IsAvailable
+                    </label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+    var btns = document.querySelectorAll(".delete-image-btn");
+
+    btns.forEach(btn=>{
+        btn.addEventListener("click",function(){
+            btn.parentElement.remove()
+        })
+    })
+
+</script>
